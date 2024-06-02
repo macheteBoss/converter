@@ -16,5 +16,7 @@ docker exec -t -e MYSQL_PWD=${MYSQL_USER_ROOT_PASSWORD} $MYSQL_CONTAINER mysql -
 echo "Create mysql database if not exists"
 docker exec -t -e MYSQL_PWD=${MYSQL_PASSWORD} $MYSQL_CONTAINER mysql -h 127.0.0.1 -u${MYSQL_USER} -e "CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE} CHARACTER SET utf8 COLLATE utf8_general_ci;"
 
+docker exec -t $PHP_CONTAINER composer install --no-interaction
+
 echo "Apply migrations"
 docker exec -t $PHP_CONTAINER php bin/console doctrine:migrations:migrate --no-interaction
