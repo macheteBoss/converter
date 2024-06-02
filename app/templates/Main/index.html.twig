@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
+{% block stylesheets %}
+    <style>
+        .table-responsive {
+            margin: 30px 0;
+        }
+        .activeLine {
+            font-weight: bold;
+            color: #fff;
+        }
+        .flash-error {
+            margin-bottom: 15px;
+            color: red;
+        }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(document).on("change keyup input click", "input#calculate_sum", function() {
+            if(this.value.match(/[^0-9]/g)){
+                this.value = this.value.replace(/[^0-9]/g, "");
+            };
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+    <div class="table-responsive">
+        <h2>Last calculations</h2>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Rate</th>
+                <th scope="col">Course</th>
+                <th scope="col">Sum</th>
+                <th scope="col">Result</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for log in logs %}
+                <tr{% if loop.first %} class="bg-primary activeLine"{% endif %}>
+                    <td>{{ log.date|date('Y-m-d H:i') }}</td>
+                    <td>{{ log.rate.currencyFrom }} => {{ log.rate.currencyTo }}</td>
+                    <td>{{ log.rate.value }}</td>
+                    <td>{{ log.sum }}</td>
+                    <td>{{ log.result }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="form">
+        {% for message in app.flashes('error') %}
+            <div class="flash-error">
+                {{ message }}
+            </div>
+        {% endfor %}
+        {{ form_start(form) }}
+            {{ form_widget(form) }}
+
+            <input type="submit" class="btn btn-primary" value = "Calculate" />
+        {{ form_end(form) }}
+    </div>
+{% endblock %}
